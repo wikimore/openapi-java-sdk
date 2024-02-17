@@ -1,14 +1,10 @@
 package com.tigerbrokers.stock.openapi.client.util;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.core.rolling.RollingFileAppender;
-import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.tigerbrokers.stock.openapi.client.constant.TigerApiConstants.CHARSET_UTF8;
@@ -36,52 +32,52 @@ public class ApiLogger {
 
   public static void setEnabled(boolean isEnabled, String logPath) {
     Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-    root.setLevel(Level.INFO);
+//    root.setLevel(Level.INFO);
     if (isEnabled) {
-      initConfig(logPath);
+//      initConfig(logPath);
     }
     ApiLogger.enabled = isEnabled;
   }
 
-  private static void initConfig(String logPath) {
-    try {
-      Path logFilePath = Paths.get(logPath == null ? "log" : logPath, LOG_FILE_NAME);
-      Path parentPath = logFilePath.toAbsolutePath().getParent();
-      if (Files.notExists(parentPath)) {
-        Files.createDirectories(parentPath);
-      }
-      String fullFilename = logFilePath.toAbsolutePath().toString();
-      String fullFilenamePattern = Paths.get(parentPath.toAbsolutePath().toString(), LOG_FILE_PATTERN).toAbsolutePath().toString();
-
-      LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-      PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-      encoder.setContext(loggerContext);
-      encoder.setCharset(CHARSET_UTF8);
-      encoder.setPattern("%d %level - %msg%n");
-      encoder.start();
-
-      RollingFileAppender rollingFileAppender = new RollingFileAppender();
-      TimeBasedRollingPolicy timeBasedRollingPolicy = new TimeBasedRollingPolicy<>();
-      timeBasedRollingPolicy.setParent(rollingFileAppender);
-      timeBasedRollingPolicy.setContext(loggerContext);
-      timeBasedRollingPolicy.setFileNamePattern(fullFilenamePattern);
-      timeBasedRollingPolicy.setMaxHistory(30);
-      timeBasedRollingPolicy.start();
-      rollingFileAppender.setName("TigerOpenApi");
-      rollingFileAppender.setContext(loggerContext);
-      //rollingFileAppender.setFile(fullFilename);
-      rollingFileAppender.setRollingPolicy(timeBasedRollingPolicy);
-      rollingFileAppender.setEncoder(encoder);
-      rollingFileAppender.start();
-
-      logger = loggerContext.getLogger("com.tigerbrokers.openapi.client");
-      logger.addAppender(rollingFileAppender);
-      logger.setLevel(Level.INFO);
-    } catch (Throwable e) {
-      throw new RuntimeException("an error occurred while init log config, error message:{}" + e.getMessage());
-    }
-  }
+//  private static void initConfig(String logPath) {
+//    try {
+//      Path logFilePath = Paths.get(logPath == null ? "log" : logPath, LOG_FILE_NAME);
+//      Path parentPath = logFilePath.toAbsolutePath().getParent();
+//      if (Files.notExists(parentPath)) {
+//        Files.createDirectories(parentPath);
+//      }
+//      String fullFilename = logFilePath.toAbsolutePath().toString();
+//      String fullFilenamePattern = Paths.get(parentPath.toAbsolutePath().toString(), LOG_FILE_PATTERN).toAbsolutePath().toString();
+//
+//      LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+//
+//      PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+//      encoder.setContext(loggerContext);
+//      encoder.setCharset(CHARSET_UTF8);
+//      encoder.setPattern("%d %level - %msg%n");
+//      encoder.start();
+//
+//      RollingFileAppender rollingFileAppender = new RollingFileAppender();
+//      TimeBasedRollingPolicy timeBasedRollingPolicy = new TimeBasedRollingPolicy<>();
+//      timeBasedRollingPolicy.setParent(rollingFileAppender);
+//      timeBasedRollingPolicy.setContext(loggerContext);
+//      timeBasedRollingPolicy.setFileNamePattern(fullFilenamePattern);
+//      timeBasedRollingPolicy.setMaxHistory(30);
+//      timeBasedRollingPolicy.start();
+//      rollingFileAppender.setName("TigerOpenApi");
+//      rollingFileAppender.setContext(loggerContext);
+//      //rollingFileAppender.setFile(fullFilename);
+//      rollingFileAppender.setRollingPolicy(timeBasedRollingPolicy);
+//      rollingFileAppender.setEncoder(encoder);
+//      rollingFileAppender.start();
+//
+//      logger = loggerContext.getLogger("com.tigerbrokers.openapi.client");
+//      logger.addAppender(rollingFileAppender);
+//      logger.setLevel(Level.INFO);
+//    } catch (Throwable e) {
+//      throw new RuntimeException("an error occurred while init log config, error message:{}" + e.getMessage());
+//    }
+//  }
 
   public static void setDebugEnabled(boolean debugEnabled) {
     ApiLogger.debugEnabled = debugEnabled;
